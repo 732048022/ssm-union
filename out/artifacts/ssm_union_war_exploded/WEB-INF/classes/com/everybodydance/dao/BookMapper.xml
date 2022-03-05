@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.everybodydance.dao.BookMapper">
+    <insert id="addPic">
+        <selectKey resultType="string" order="BEFORE" keyProperty="id">
+            select replace(uuid(),'-','')as id
+        </selectKey>
+        insert into pic(id,savepath,realname,uploadtime,bookid,cover) values (#{id},#{savepath},#{realname},#{uploadtime},#{bookid},#{cover})
+    </insert>
+    <insert id="addBook">
+        <selectKey resultType="string" order="BEFORE" keyProperty="id">
+            select replace(uuid(),'-','')as id
+        </selectKey>
+        insert into book(id,name,author,price,stock,status,publishdate,publisherid,del,info,picid) values (#{id},#{name},#{author},#{price},#{stock},#{status},#{publishdate},#{publisherid},#{del},#{info},#{picid})
+    </insert>
+    <resultMap id="rMap_book" type="book">
+        <id property="id" column="bid"></id>
+        <result property="name" column="bname"></result>
+        <result property="author" column="author"></result>
+        <result property="price" column="price"></result>
+        <result property="status" column="status"></result>
+        <result property="del" column="del"></result>
+        <result property="stock" column="stock"></result>
+        <result property="info" column="bookinfo"></result>
+        <result property="publisherid" column="publisherid"></result>
+        <result property="publishdate" column="publishdate"></result>
+        <result property="picid" column="pid"></result>
+        <association property="pub" javaType="publisher">
+            <id property="id" column="pid"></id>
+            <result property="name" column="pname"></result>
+            <result property="phone" column="phone"></result>
+            <result property="info" column="info"></result>
+        </association>
+        <collection property="pics" ofType="pic">
+                <id property="id" column="pid"></id>
+                <result property="cover" column="cover"></result>
+                <result property="uploadtime" column="uploadtime"></result>
+                <result property="cover" column="cover"></result>
+                <result property="realname" column="realname"></result>
+                <result property="bookid" column="bookid"></result>
+                <result property="savepath" column="savepath"></result>
+        </collection>
+    </resultMap>
+    <sql id="del">
+        b.del =0
+    </sql>
+    <select id="queryByCondition" resultMap="rMap_book">
+        select b.id as bid,b.name as bname,b.price,b.author,b.publishdate,b.status,b.del,b.info as bookinfo,b.stock,b.publisherid,b.picid as pid,pic.savepath,pic.cover,pic.uploadtime,pic.realname,pic.bookid,
+        p.id as pid,p.name as pname,p.phone,concat_ws('-',pro.name,city.name,area.name,p.info) as info
+        from book b left join publisher p on b.publisherid = p.id
+        left join pic on b.picid = pic.id
+        left join address pro on p.proid = pro.id
+        left join address city on p.cityid = city.id
+        left join address area on p.areaid  = area.id
+        <where>
+            <include refid="del"></include>
+            <if test="name!=null and name!=''">
+                and b.name like '%${name}%'
+            </if>
+            <if test="publisherid!=null and publisherid!=''">
+                and b.publisherid = #{publisherid}
+            </if>
+            <if test="startdate!=null and startdate!=''">
+                and b.publishdate&gt;=date_format(#{startdate},'%y-%m-%d')
+            </if>
+            <if test="enddate!=null and enddate!=''">
+                and b.publishdate&lt;=date_format(#{enddate},'%y-%m-%d')
+            </if>
+        </where>
+    </select>
+    <select id="queryPicById" resultType="pic">
+        select * from pic where id =#{picid}
+    </select>
+    <update id="updatePic" parameterType="pic">
+        update pic set bookid=#{bookid} where id =#{id}
+    </update>
+    <select id="queryPicByBookId" resultType="string">
+        select pic.savepath from pic where pic.bookid = #{id}
+    </select>
+    <update id="delById">
+        update book set del =1 where id in
+        <foreach collection="listStr" separator="," open="(" close=")" item="str">
+            #{str}
+        </foreach>
+    </update>
+</mapper>

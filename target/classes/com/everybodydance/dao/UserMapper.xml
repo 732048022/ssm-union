@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.everybodydance.dao.UserMapper">
+<select id="queryMenuByUserID" resultType="menus">
+select * from menus m where
+        m.id in (select menuid from role_menu rm where rm.roleid in (select ur.roleid from user_role ur where ur.userid=#{userID}))
+    </select>
+    <select id="queryUserByUsernameAndPwd" resultType="users">
+        select * from users where uname =#{u} and pwd = md5(#{p})
+    </select>
+    <select id="queryBookByBookId" resultType="book">
+        select * from book where id =#{id}
+    </select>
+
+    <insert id="insertUser" >
+        insert into users (uname,pwd) values(#{u},md5(#{p}));
+    </insert>
+</mapper>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.everybodydance.dao.FoodMapper">
+    <insert id="addPic">
+        <selectKey resultType="string" order="BEFORE" keyProperty="id">
+            select replace(uuid(),'-','')as id
+        </selectKey>
+        insert into pic(id,savepath,realname,foodid) values (#{id},#{savepath},#{realname},#{foodid})
+    </insert>
+    <select id="queryPicById" resultType="foodpic">
+        select * from pic where id =#{picid}
+    </select>
+    <update id="updatePic">
+        update pic set foodid=#{foodid} where id =#{id}
+    </update>
+    <insert id="addFood">
+        <selectKey resultType="string" order="BEFORE" keyProperty="id">
+            select replace(uuid(),'-','')as id
+        </selectKey>
+        insert into food(id,name,price,picid,info,kindid) values (#{id},#{name},#{price},#{picid},#{info},#{kindid})
+    </insert>
+    <resultMap id="res_food" type="food">
+        <id property="id" column="id"></id>
+        <result property="name" column="name"></result>
+        <result property="info" column="info"></result>
+        <result property="picid" column="picid"></result>
+        <result property="kindid" column="kindid"></result>
+        <result property="price" column="price"></result>
+        <association property="kind" javaType="publisher">
+            <id property="id" column="kid"></id>
+            <result property="name" column="kname"></result>
+        </association>
+        <collection property="foodpics" ofType="foodpic">
+            <id property="id" column="pid"></id>
+            <result property="savepath" column="savepath"></result>
+            <result property="realname" column="realname"></result>
+            <result property="foodid" column="foodid"></result>
+        </collection>
+    </resultMap>
+    <select id="querySome" resultMap="res_food">
+        select f.id,f.name,f.info,f.picid,f.price,f.kindid,pic.id as pid,pic.savepath,pic.realname,pic.foodid,k.id,k.name kname from food f left join kinds k on f.kindid = k.id left join pic on pic.id =f.picid
+    </select>
+    <delete id="delByFoodId">
+        delete from food where id =#{id}
+    </delete>
+    <update id="setFood">
+        update food set name =#{name},picid =#{picid},info =#{info},kindid =#{kindid},price =#{price} where id =#{id}
+    </update>
+    <select id="hasFood" resultType="food">
+        select * from food where name =#{name}
+    </select>
+    <select id="queryPicUrlByFoodId" resultType="string">
+        select pic.savepath from food f left join pic on f.picid = pic.id where f.id =#{foodId}
+    </select>
+</mapper>
