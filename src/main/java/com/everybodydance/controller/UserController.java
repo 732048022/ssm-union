@@ -55,6 +55,7 @@ public class UserController {
             String token = UUID.randomUUID().toString().replace("-", "");
             Users u = service.queryUserByUsernameAndPwd(uname, pwd);
             if (u != null && uname.equals(u.getUname())) {
+
                 try {
                     RedisUtil ru = RedisUtil.getRedisUtil();
                     u.setToken(token);
@@ -64,6 +65,7 @@ public class UserController {
                     return sr.setResponse("", "446");
                 }
             } else {
+
                 return sr.setResponse("", "445");
             }
             return sr.setResponse(u,"200");//这里回去了Cookie
@@ -88,6 +90,7 @@ public class UserController {
         String str =hs.getAttribute("checkcode")+"";
         if(str.equalsIgnoreCase(checkCode)) {
           //  String token = UUID.randomUUID().toString().replace("-", "");
+            log.info("UserController--regist--queryUserByUsernameAndPwd:Param:{},{}",uname,pwd);
             Users u = service.queryUserByUsernameAndPwd(uname, pwd);
             if (u !=null) {
                 log.info("该数据库中已存在该用户，请重新注册！");
@@ -97,7 +100,7 @@ public class UserController {
                 log.info("UserController--regist--insertUser:Param:{},{}",uname,pwd);
                 service.insertUser(uname,pwd);
                 log.info("新增用户成功......");
-                return sr.setResponse(u,"200");//这里回去了Cookie
+                return sr.setResponse(uname,"200");//这里回去了Cookie
             }
         }else {
             return sr.setResponse("","447");//验证码输入错误
