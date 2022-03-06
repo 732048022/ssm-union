@@ -6,6 +6,7 @@ import com.everybodydance.commons.utils.page;
 import com.everybodydance.pojo.Table;
 import com.everybodydance.service.TableService;
 import com.github.pagehelper.PageInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.List;
 
 @Controller
+@Slf4j
 @RequestMapping("/table")
 public class TableController {
     @Autowired
@@ -24,6 +26,7 @@ public class TableController {
     @RequestMapping(value = "/querySome",method = RequestMethod.POST)
     @ResponseBody
     public ETResponse querySome(int pageNumber, int pageSize){
+        log.info("进入查询菜单信息......");
         List<Table> rows = service.querySome(pageNumber, pageSize);
         PageInfo<Table> info = new PageInfo<>(rows);//info 是个Mybatis写的page
         page<Table> pa = new page<>();
@@ -67,6 +70,7 @@ public class TableController {
     @RequestMapping(value = "/addTable",method = RequestMethod.POST)
     @ResponseBody
     public ETResponse addTable(String info,int personCount){
+        log.info("进入添加餐桌信息......");
         service.addTable(info,personCount);
         return sr.setResponse("","200");
     }

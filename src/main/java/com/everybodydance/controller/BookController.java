@@ -51,7 +51,6 @@ public class BookController {
     @RequestMapping(value = "/addPic", method = RequestMethod.POST)
     @ResponseBody
     public ETResponse addPic(MultipartFile file, HttpServletRequest request) throws IOException {
-        log.info("进入添加图片功能......");
         String fileName = file.getOriginalFilename();
         String fExt = fileName.substring(fileName.lastIndexOf("."));
         String newFileName = UUID.randomUUID().toString().replaceAll("-", "")+ fExt;
@@ -70,6 +69,14 @@ public class BookController {
         return null;
 
     }
+
+    /**
+     * 查询桌子信息
+     * @param vo
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
     @RequestMapping(value = "/querySome",method = RequestMethod.POST)
     @ResponseBody
     public ETResponse querySome(BookVo vo, int pageNumber, int pageSize) {

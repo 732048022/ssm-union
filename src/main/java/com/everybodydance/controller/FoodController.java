@@ -53,6 +53,7 @@ public class FoodController {
     @RequestMapping(value = "/addFood", method = RequestMethod.POST)
     @ResponseBody
     public ETResponse addFood(Food food) {
+        log.info("进入添加菜单......");
         try {
             service.addFood(food);
             return sr.setResponse("添加成功","200");
@@ -63,6 +64,7 @@ public class FoodController {
     @RequestMapping(value = "/querySome", method = RequestMethod.POST)
     @ResponseBody
     public ETResponse querySome(int pageNumber, int pageSize) {
+        log.info("进入查询菜单信息......");
         List<Food> rows = service.querySome(pageNumber, pageSize);
         PageInfo<Food> info = new PageInfo<>(rows);//info 是个Mybatis写的page
         page<Food> pa = new page<>();

@@ -109,6 +109,7 @@ public class UserController {
     @RequestMapping("/queryMenuByUserId")
     @ResponseBody
     public ETResponse queryMenuByUserID(String token){
+        log.info("根据用户信息查询菜单......");
         RedisUtil ru =RedisUtil.getRedisUtil();//打开Redis工具 我资源里上传了
         String userInfo =ru.get(token);// 相当于是一个Map
         Users u =JSONObject.parseObject(userInfo,Users.class);
