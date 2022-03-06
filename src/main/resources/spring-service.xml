@@ -31,4 +31,6 @@
         <aop:pointcut id="txPointCut" expression="execution(* com.everybodydance.dao.*.*(..))"/>
         <aop:advisor advice-ref="txAdvice" pointcut-ref="txPointCut"/>
     </aop:config>
+<!--该配置自动为spring容器中那些配置@aspectJ切面的bean创建代理，织入切面。-->
+    <aop:aspectj-autoproxy/>
 </beans>

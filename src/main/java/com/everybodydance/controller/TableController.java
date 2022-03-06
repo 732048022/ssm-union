@@ -57,6 +57,13 @@ public class TableController {
         service.setTable(info,personCount,id);
         return sr.setResponse("","200");
     }
+
+    /**
+     * 添加桌子
+     * @param info
+     * @param personCount
+     * @return
+     */
     @RequestMapping(value = "/addTable",method = RequestMethod.POST)
     @ResponseBody
     public ETResponse addTable(String info,int personCount){

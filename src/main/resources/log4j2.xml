@@ -19,7 +19,7 @@
         </logger>
         <logger name="org.mybatis" level="INFO">
         </logger>
-        <root level="INFO">
+        <root level="DEBUG">
             <appender-ref ref="Console"/>
         </root>
     </loggers>

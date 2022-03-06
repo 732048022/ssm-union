@@ -7,6 +7,7 @@ import com.everybodydance.pojo.Food;
 import com.everybodydance.pojo.FoodPic;
 import com.everybodydance.service.FoodService;
 import com.github.pagehelper.PageInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,7 @@ import java.util.UUID;
 
 @Controller
 @RequestMapping("/food")
+@Slf4j
 public class FoodController {
     @Autowired
     private SetResponse sr;
@@ -31,6 +33,7 @@ public class FoodController {
     @RequestMapping(value = "/addPic", method = RequestMethod.POST)
     @ResponseBody
     public ETResponse addPic(MultipartFile file, HttpServletRequest request) throws IOException {
+        log.info("进入添加图片功能......");
         String fileName = file.getOriginalFilename();
         String fExt = fileName.substring(fileName.lastIndexOf("."));
         String newFileName = UUID.randomUUID().toString().replaceAll("-", "")+ fExt;

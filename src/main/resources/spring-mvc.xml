@@ -13,9 +13,16 @@
     <!--3.扫描包：controller-->
     <context:component-scan base-package="com.everybodydance.controller"/>
     <context:component-scan base-package="com.everybodydance.commons"/>
+    <context:component-scan base-package="com.everybodydance.aspect"/>
     <!--4.视图解析器-->
     <bean class=" org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/jsp/"/>
         <property name="suffix" value=".jsp"/>
+    </bean>
+
+    <!--文件上传解析器 必须配置id 而且必须是multipartResolver-->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!--每个文件最大2M-->
+        <property name="maxUploadSizePerFile" value="2097152"></property>
     </bean>
 </beans>
